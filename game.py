@@ -89,10 +89,46 @@ def InitiativeRoll(character1, character2):
     else:
         return InitiativeRoll(character1, character2)
     
-character1 = Character(20, 0, 10, "Gracz1")
-character2 = Character(3, 27, 0, "Gracz2")
+
+
+def CheckIfStatValid(stat):
+    try:
+        statnum = int(stat)
+    except ValueError:
+        print("Not a number")
+        return False
+        
+    if statnum<0 or statnum>30:
+        print("Stat invalid")
+        return False
+    
+    return True
+
+def GetStat(message):
+    stat = input(message)
+    if CheckIfStatValid(stat):
+        return int(stat)
+    else:
+        return GetStat(message)
+    
+    
+def InputCharacterStats():
+    print("Input your character stats. Stats have to add up to 30.")
+    ATT = GetStat("Attack: ")
+    DEF = GetStat("Defense: ")
+    CON = GetStat("Constitution: ")
+    Name = input("Name: ")
+    if(ATT+DEF+CON) !=30:
+        print("Stats don't add up to 30")
+        return InputCharacterStats()
+    return ATT, DEF, CON, Name
+
 
 def main():
+    ATT, DEF, CON, Name = InputCharacterStats()
+    character1 = Character(ATT, DEF, CON, Name)
+    ATT, DEF, CON, Name = InputCharacterStats()
+    character2 = Character(ATT, DEF, CON, Name)
     player1, player2 = InitiativeRoll(character1, character2)
     while(player1.HP>0 and player2.HP>0):    
         ChoiceMenu(player1, player2)
@@ -105,6 +141,7 @@ def main():
             print(f"{player2.name} won")
             break
         sleep(1)
-        
+
+
 main()
     
