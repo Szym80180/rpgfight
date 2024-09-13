@@ -66,8 +66,6 @@ def Attack(playerAttacking, playerDefending):
     else:
         print(f"Attack unsuccessful, Attack score: {ATT}, Defence score: {DEF}")
         
-        
-        
 def ChoiceMenu(playerChoosing, otherPlayer):
     print(f"{playerChoosing.name} - Choose an action:")
     print("1 - Attack")
@@ -79,10 +77,23 @@ def ChoiceMenu(playerChoosing, otherPlayer):
         case "2":
             playerChoosing.defend()
     
-player1 = Character(20, 0, 10, "Gracz1")
-player2 = Character(3, 27, 0, "Gracz2")
+def InitiativeRoll(character1, character2):
+    rollCharacter1 = Roll(20)
+    rollCharacter2 = Roll(20)
+    if rollCharacter1 > rollCharacter2:
+        print(f"Initiative roll: {character1.name}: {rollCharacter1}, {character2.name}: {rollCharacter2}")
+        return (character1, character2)
+    elif rollCharacter2 > rollCharacter1:
+        print(f"Initiative roll: {character1.name}: {rollCharacter1}, {character2.name}: {rollCharacter2}")
+        return (character2, character1)
+    else:
+        return InitiativeRoll(character1, character2)
+    
+character1 = Character(20, 0, 10, "Gracz1")
+character2 = Character(3, 27, 0, "Gracz2")
 
 def main():
+    player1, player2 = InitiativeRoll(character1, character2)
     while(player1.HP>0 and player2.HP>0):    
         ChoiceMenu(player1, player2)
         if not player2.HP>0:
