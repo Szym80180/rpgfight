@@ -97,11 +97,11 @@ def ChoiceMenu(playerChoosing, otherPlayer):
     print("")
 
 def GetChoiceMenuInput():
-    input = input("Choice: ")
-    if input != '1' or input !='2':
+    choice = input("Choice: ")
+    if choice not in ['1', '2']:
         print("Wrong input")
         return GetChoiceMenuInput()
-    return input
+    return choice
 
     
 
