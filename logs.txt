@@ -1,1 +1,12 @@
 Choice Menu input validation
+
+Penalties for too low stat points (disadvantage in rolls)
+
+Parry:
+-Parry
+-if enemy attacks - their attack roll damages them
+-if enemy does something else - you lose a turn
+
+set isParrying boolean to true
+go to next turn
+get input

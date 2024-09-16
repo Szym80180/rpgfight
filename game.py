@@ -11,12 +11,15 @@ class Character:
         self._defenceHP= self.HP
         self.name=name
         self._defending = False
+        self.isParrying = False
+    
     
 
     def removeHP(self, hp):
         self.HP -= hp
     
     def defend(self):
+        self.endParry()
         self._def= self._def+self._con/2
         self._defending = True
         
@@ -24,6 +27,21 @@ class Character:
         if self._defending:
             self._def= self._def-self._con/2
             self._defending = False
+            
+    def parry(self):
+        self.endDefense()
+        self._isParrying = True
+    
+    def endParry(self):
+        self._isParrying = False
+        
+    @property
+    def isParrying(self):
+        return self._isParrying
+    
+    @isParrying.setter
+    def isParrying(self, isParrying):
+        self._isParrying = isParrying
     
     @property
     def DEF(self):
@@ -69,17 +87,24 @@ def InitiativeRoll(character1, character2):
 ### Actions
 def Attack(playerAttacking, playerDefending):
     playerAttacking.endDefense()
+    playerAttacking.endParry()
     ATT = playerAttacking.ATT
     DEF = playerDefending.DEF
     ATT  += Roll(20)
-    if ATT >= DEF:
+    
+    if playerDefending.isParrying==True:
         dmg=Roll(10)
-        playerDefending.removeHP(dmg)
-        print(f"{playerAttacking.name} dealt {dmg} damage to {playerDefending.name}, {playerDefending.HP} HP remaining, Attack score: {ATT}, Defence score: {DEF}")
-        
-    else:
-        print(f"Attack unsuccessful, Attack score: {ATT}, Defence score: {DEF}")
-       
+        playerAttacking.removeHP(dmg)
+        print(f"{playerDefending.name} parried and dealt {dmg} damage to {playerAttacking.name}, {playerAttacking.HP} HP remaining")
+        playerDefending.endParry()
+    else:    
+        if ATT >= DEF:
+            dmg=Roll(10)
+            playerDefending.removeHP(dmg)
+            print(f"{playerAttacking.name} dealt {dmg} damage to {playerDefending.name}, {playerDefending.HP} HP remaining, Attack score: {ATT}, Defence score: {DEF}")
+
+        else:
+            print(f"Attack unsuccessful, Attack score: {ATT}, Defence score: {DEF}")
        
 ### Choice menu
  
@@ -88,23 +113,36 @@ def ChoiceMenu(playerChoosing, otherPlayer):
     print(f"{playerChoosing.name} - Choose an action:")
     print("1 - Attack")
     print("2 - Defend")
+    print("3 - Parry")
     choice = GetChoiceMenuInput()
     match choice:
         case "1":
             Attack(playerChoosing, otherPlayer)
         case "2":
             playerChoosing.defend()
+            NoAttackToParry(playerChoosing, otherPlayer)
+        case "3":
+            playerChoosing.parry()
+            NoAttackToParry(playerChoosing, otherPlayer)
     print("")
 
 def GetChoiceMenuInput():
     choice = input("Choice: ")
-    if choice not in ['1', '2']:
+    if choice not in ['1', '2', '3']:
         print("Wrong input")
         return GetChoiceMenuInput()
     return choice
 
+def NoAttackToParry(playerChoosing, otherPlayer):
+    if otherPlayer.isParrying:
+        otherPlayer.endParry()
+        oldDefence = otherPlayer.DEF
+        otherPlayer.DEF=otherPlayer.DEF/2
+        ChoiceMenu(playerChoosing, otherPlayer)
+        otherPlayer.DEF = oldDefence
+    else:
+        pass
     
-
 ### Stat handling
 def CheckIfStatValid(stat):
     try:
@@ -138,12 +176,13 @@ def InputCharacterStats():
         return InputCharacterStats()
     return ATT, DEF, CON, Name
 
-
+character1 = Character(10, 10, 10, "Player 1")
+character2 = Character(15, 15, 0, "Player 2")
 def main():
-    ATT, DEF, CON, Name = InputCharacterStats()
-    character1 = Character(ATT, DEF, CON, Name)
-    ATT, DEF, CON, Name = InputCharacterStats()
-    character2 = Character(ATT, DEF, CON, Name)
+    #ATT, DEF, CON, Name = InputCharacterStats()
+    #character1 = Character(ATT, DEF, CON, Name)
+    #ATT, DEF, CON, Name = InputCharacterStats()
+    #character2 = Character(ATT, DEF, CON, Name)
     player1, player2 = InitiativeRoll(character1, character2)
     while(player1.HP>0 and player2.HP>0):    
         ChoiceMenu(player1, player2)
