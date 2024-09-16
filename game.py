@@ -49,36 +49,11 @@ class Character:
     def CON(self, CON):
         self._con = CON
     
+### Rolls
 
 def Roll(dice, bonus=0):
     return randrange(1, dice) + bonus
 
-def Attack(playerAttacking, playerDefending):
-    playerAttacking.endDefense()
-    ATT = playerAttacking.ATT
-    DEF = playerDefending.DEF
-    ATT  += Roll(20)
-    if ATT >= DEF:
-        dmg=Roll(10)
-        playerDefending.removeHP(dmg)
-        print(f"{playerAttacking.name} dealt {dmg} damage to {playerDefending.name}, {playerDefending.HP} HP remaining, Attack score: {ATT}, Defence score: {DEF}")
-        
-    else:
-        print(f"Attack unsuccessful, Attack score: {ATT}, Defence score: {DEF}")
-        
-def ChoiceMenu(playerChoosing, otherPlayer):
-    print("")
-    print(f"{playerChoosing.name} - Choose an action:")
-    print("1 - Attack")
-    print("2 - Defend")
-    choice = input("Choice: ")
-    match choice:
-        case "1":
-            Attack(playerChoosing, otherPlayer)
-        case "2":
-            playerChoosing.defend()
-    print("")
-    
 def InitiativeRoll(character1, character2):
     rollCharacter1 = Roll(20)
     rollCharacter2 = Roll(20)
@@ -91,8 +66,46 @@ def InitiativeRoll(character1, character2):
     else:
         return InitiativeRoll(character1, character2)
     
+### Actions
+def Attack(playerAttacking, playerDefending):
+    playerAttacking.endDefense()
+    ATT = playerAttacking.ATT
+    DEF = playerDefending.DEF
+    ATT  += Roll(20)
+    if ATT >= DEF:
+        dmg=Roll(10)
+        playerDefending.removeHP(dmg)
+        print(f"{playerAttacking.name} dealt {dmg} damage to {playerDefending.name}, {playerDefending.HP} HP remaining, Attack score: {ATT}, Defence score: {DEF}")
+        
+    else:
+        print(f"Attack unsuccessful, Attack score: {ATT}, Defence score: {DEF}")
+       
+       
+### Choice menu
+ 
+def ChoiceMenu(playerChoosing, otherPlayer):
+    print("")
+    print(f"{playerChoosing.name} - Choose an action:")
+    print("1 - Attack")
+    print("2 - Defend")
+    choice = GetChoiceMenuInput()
+    match choice:
+        case "1":
+            Attack(playerChoosing, otherPlayer)
+        case "2":
+            playerChoosing.defend()
+    print("")
 
+def GetChoiceMenuInput():
+    input = input("Choice: ")
+    if input != '1' or input !='2':
+        print("Wrong input")
+        return GetChoiceMenuInput()
+    return input
 
+    
+
+### Stat handling
 def CheckIfStatValid(stat):
     try:
         statnum = int(stat)
