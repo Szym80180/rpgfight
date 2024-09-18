@@ -1,6 +1,7 @@
 Choice Menu input validation
 
 Penalties for too low stat points (disadvantage in rolls)
+Try to do classmethods
 
 Parry:
 -Parry
