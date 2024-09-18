@@ -12,8 +12,18 @@ class Character:
         self.name=name
         self._defending = False
         self.isParrying = False
-    
-    
+        
+    @classmethod
+    def InputCharacterStats(cls):
+        print("Input your character stats. Stats have to add up to 30.")
+        ATT = GetStat("Attack: ")
+        DEF = GetStat("Defense: ")
+        CON = GetStat("Constitution: ")
+        Name = input("Name: ")
+        if(ATT+DEF+CON) !=30:
+            print("Stats don't add up to 30")
+            return cls.InputCharacterStats()
+        return Character(ATT, DEF, CON, Name)
 
     def removeHP(self, hp):
         self.HP -= hp
@@ -34,6 +44,8 @@ class Character:
     
     def endParry(self):
         self._isParrying = False
+        
+        
         
     @property
     def isParrying(self):
@@ -86,8 +98,6 @@ def InitiativeRoll(character1, character2):
     
 ### Actions
 def Attack(playerAttacking, playerDefending):
-    playerAttacking.endDefense()
-    playerAttacking.endParry()
     ATT = playerAttacking.ATT
     DEF = playerDefending.DEF
     ATT  += Roll(20)
@@ -109,6 +119,8 @@ def Attack(playerAttacking, playerDefending):
 ### Choice menu
  
 def ChoiceMenu(playerChoosing, otherPlayer):
+    playerChoosing.endDefense()
+    playerChoosing.endParry()
     print("")
     print(f"{playerChoosing.name} - Choose an action:")
     print("1 - Attack")
@@ -165,24 +177,13 @@ def GetStat(message):
         return GetStat(message)
     
     
-def InputCharacterStats():
-    print("Input your character stats. Stats have to add up to 30.")
-    ATT = GetStat("Attack: ")
-    DEF = GetStat("Defense: ")
-    CON = GetStat("Constitution: ")
-    Name = input("Name: ")
-    if(ATT+DEF+CON) !=30:
-        print("Stats don't add up to 30")
-        return InputCharacterStats()
-    return ATT, DEF, CON, Name
+
 
 character1 = Character(10, 10, 10, "Player 1")
 character2 = Character(15, 15, 0, "Player 2")
-def main():
-    #ATT, DEF, CON, Name = InputCharacterStats()
-    #character1 = Character(ATT, DEF, CON, Name)
-    #ATT, DEF, CON, Name = InputCharacterStats()
-    #character2 = Character(ATT, DEF, CON, Name)
+def main():    
+    #character1 = Character.InputCharacterStats()   
+    #character2 = Character.InputCharacterStats()
     player1, player2 = InitiativeRoll(character1, character2)
     while(player1.HP>0 and player2.HP>0):    
         ChoiceMenu(player1, player2)
