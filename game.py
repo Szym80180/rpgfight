@@ -191,12 +191,12 @@ def main():
         if not player2.HP>0:
             print(f"{player1.name} won")
             break
-        sleep(0.5)
+        sleep(0.2)
         ChoiceMenu(player2, player1)
         if not player1.HP>0:
             print(f"{player2.name} won")
             break
-        sleep(0.5)
+        sleep(0.2)
 
 
 
