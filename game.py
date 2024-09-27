@@ -147,6 +147,7 @@ def GetChoiceMenuInput():
 
 def NoAttackToParry(playerChoosing, otherPlayer):
     if otherPlayer.isParrying:
+        print(f"{otherPlayer.name} tried to parry, but {playerChoosing.name} didn't attack! {otherPlayer.name} loses a turn")
         otherPlayer.endParry()
         oldDefence = otherPlayer.DEF
         otherPlayer.DEF=otherPlayer.DEF/2
